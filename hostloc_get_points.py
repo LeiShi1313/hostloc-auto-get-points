@@ -1,8 +1,8 @@
 import os
-from requests import Session as req_Session
+import re
 import time
 import random
-import re
+from requests import Session as req_Session
 
 
 # 随机生成用户空间链接
@@ -63,10 +63,9 @@ def get_points(s: req_Session, number_c: int):
     else:
         print("请检查你的帐户是否正确！")
 
-
-if __name__ == "__main__":
-    username = os.environ["HOSTLOC_USERNAME"]
-    password = os.environ["HOSTLOC_PASSWORD"]
+def handler(event, context):
+    username = os.environ.get('HOSTLOC_USERNAME')
+    password = os.environ.get('HOSTLOC_PASSWORD')
 
     # 分割用户名和密码为列表
     user_list = username.split(",")
@@ -89,3 +88,6 @@ if __name__ == "__main__":
             continue
 
         print("程序执行完毕，获取积分过程结束")
+
+if __name__ == "__main__":
+    handler(None, None)

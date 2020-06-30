@@ -1,0 +1,35 @@
+# serverless.yml
+
+service: serverless-hostloc-autovisit
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
+package:
+  exclude:
+    - node_modules/**
+    - '!node_modules/node-fetch/**'
+    - package*.json
+    - .serverless/**
+    - serverless.yml
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: dev
+  memorySize: 512
+  region: us-west-1
+
+functions:
+  app:
+    handler: hostloc_get_points.handler
+    environment:
+      HOSTLOC_USERNAME: ${env:HOSTLOC_USERNAME}
+      HOSTLOC_PASSWORD: ${env:HOSTLOC_PASSWORD}
+    events:
+      - schedule: rate(10 hours)
+      - http: GET /
